@@ -1,4 +1,4 @@
-package com.example.pokeapiprueba2retrofit.main.domain.remote
+package com.example.pokeapiprueba2retrofit.app.main.data.remote
 
 import com.google.gson.annotations.SerializedName
 
