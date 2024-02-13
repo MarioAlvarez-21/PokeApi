@@ -3,17 +3,25 @@ package com.example.pokeapiprueba2retrofit.app.infopokemon.ui
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.pokeapiprueba2retrofit.app.api.PokeApi
 import com.example.pokeapiprueba2retrofit.app.infopokemon.viewmodel.InfoPokemonViewModel
-import com.example.pokeapiprueba2retrofit.app.main.viewmodel.PokemonViewModel
 import com.example.pokeapiprueba2retrofit.databinding.ActivityInfoPokemonBinding
+import kotlinx.coroutines.launch
 
 class InfoPokemonActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityInfoPokemonBinding
     private lateinit var viewModel: InfoPokemonViewModel
+
+    private val defaultValue = 0.0
+    private val HEC_TO_LB = 4.536
+    private val HEC_TO_KG = 10.0
+    private val HEC_TO_OZ = 3.527
+    private val DM_TO_M = 10.0
+    private val DM_TO_FT = 3.048
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityInfoPokemonBinding.inflate(layoutInflater)
@@ -24,58 +32,80 @@ class InfoPokemonActivity : AppCompatActivity() {
         val intent = intent
         val pokemonId = intent.getIntExtra("id", 0)
 
-        viewModel.getSprites(pokemonId+1)
+        viewModel.getSprites(pokemonId + 1)
 
-        viewModel.sprites1.observe(this) { sprites1 ->
-            imageSprites(
-                sprites1?.frontDefault.toString(),
-                sprites1?.frontShiny.toString(),
-                sprites1?.backDefault.toString(),
-                sprites1?.backShiny.toString()
-            )
+        lifecycleScope.launch {
+            viewModel.sprites1.collect { sprites1 ->
+                imageSprites(
+                    sprites1?.frontDefault.toString(),
+                    sprites1?.frontShiny.toString(),
+                    sprites1?.backDefault.toString(),
+                    sprites1?.backShiny.toString()
+                )
 
-            binding.apply {
-                iv1.setOnClickListener { initialImage(sprites1?.frontDefault.toString()) }
-                iv2.setOnClickListener { initialImage(sprites1?.backDefault.toString()) }
-                iv3.setOnClickListener { initialImage(sprites1?.frontShiny.toString()) }
-                iv4.setOnClickListener { initialImage(sprites1?.backShiny.toString()) }
-            }
-
-        }
-        viewModel.pokemonName.observe(this) { name ->
-            binding.tvName.text = name?.substring(0, 1)?.toUpperCase() + name?.substring(1)
-        }
-        viewModel.pokemonWeight.observe(this) { weight ->
-            binding.apply {
-                tvPeso.text = weight.toString().plus(" lb")
-                cvKg.setOnClickListener{
-                    tvPeso.text = weight?.div(2.205)?.toInt().toString().plus(" kg")
-                }
-                cvLb.setOnClickListener{
-                    tvPeso.text = weight.toString().plus(" lb")
-                }
-                cvOnz.setOnClickListener{
-                    tvPeso.text = weight?.times(16).toString().plus(" oz")
+                binding.apply {
+                    iv1.setOnClickListener { initialImage(sprites1?.frontDefault.toString()) }
+                    iv2.setOnClickListener { initialImage(sprites1?.backDefault.toString()) }
+                    iv3.setOnClickListener { initialImage(sprites1?.frontShiny.toString()) }
+                    iv4.setOnClickListener { initialImage(sprites1?.backShiny.toString()) }
                 }
             }
         }
-        viewModel.pokemonHeight.observe(this) { height ->
-            binding.apply {
-                tvAlto.text = height.toString().plus(" ft")
-                cvMetros.setOnClickListener {
-                    tvAlto.text = height?.div(5.1816)?.toInt().toString().plus(" m")
-                }
-                cvPies.setOnClickListener {
-                    tvAlto.text = height.toString().plus(" ft")
+
+        lifecycleScope.launch {
+            viewModel.pokemonName.collect { name ->
+                binding.tvName.text = name?.substring(0, 1)?.toUpperCase() + name?.substring(1)
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.pokemonWeight.collect { weight ->
+                binding.apply {
+                    tvPeso.text =
+                        viewModel.divFormat(weight ?: defaultValue.toInt(), HEC_TO_LB, " lb")
+                    cvKg.setOnClickListener {
+                        tvPeso.text =
+                            viewModel.divFormat(weight ?: defaultValue.toInt(), HEC_TO_KG, " kg")
+                    }
+                    cvLb.setOnClickListener {
+                        tvPeso.text =
+                            viewModel.divFormat(weight ?: defaultValue.toInt(), HEC_TO_LB, " lb")
+                    }
+                    cvOnz.setOnClickListener {
+                        tvPeso.text =
+                            viewModel.mulFormat(weight ?: defaultValue.toInt(), HEC_TO_OZ, " oz")
+                    }
                 }
             }
+        }
 
+        lifecycleScope.launch {
+            viewModel.pokemonHeight.collect { height ->
+                binding.apply {
+                    tvAlto.text =
+                        viewModel.divFormat(height ?: defaultValue.toInt(), DM_TO_FT, " ft")
+                    cvMetros.setOnClickListener {
+                        tvAlto.text =
+                            viewModel.divFormat(height ?: defaultValue.toInt(), DM_TO_M, " m")
+                    }
+                    cvPies.setOnClickListener {
+                        tvAlto.text =
+                            viewModel.divFormat(height ?: defaultValue.toInt(), DM_TO_FT, " ft")
+                    }
+                }
+            }
         }
-        viewModel.pokemonTypes.observe(this) { types ->
-            binding.tvTypes.text = types?.joinToString(", ")
+
+        lifecycleScope.launch {
+            viewModel.pokemonTypes.collect { types ->
+                binding.tvTypes.text = types?.joinToString(", ")
+            }
         }
-        viewModel.pokemonAbilities.observe(this) {abilities ->
-            binding.tvAbilities.text = abilities?.joinToString (", ")
+
+        lifecycleScope.launch {
+            viewModel.pokemonAbilities.collect { abilities ->
+                binding.tvAbilities.text = abilities?.joinToString(", ")
+            }
         }
 
         val requestOptions = RequestOptions()
@@ -115,7 +145,7 @@ class InfoPokemonActivity : AppCompatActivity() {
             .into(binding.iv4)
     }
 
-    private fun initialImage(image:String){
+    private fun initialImage(image: String) {
         val requestOptions = RequestOptions()
             .centerCrop()
             .error(android.R.drawable.ic_menu_gallery)

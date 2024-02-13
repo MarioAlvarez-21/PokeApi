@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:background="#00514A">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -27,8 +27,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="25dp"
-            android:textColor="#009688"
+            android:textColor="@color/white"
             android:textSize="25sp"
+            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
@@ -38,7 +39,7 @@
         <ImageView
             android:id="@+id/iv_1"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="100dp"
             android:layout_marginTop="50dp"
             app:layout_constraintEnd_toStartOf="@+id/iv_2"
             app:layout_constraintStart_toStartOf="parent"
@@ -48,7 +49,7 @@
         <ImageView
             android:id="@+id/iv_2"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="100dp"
             android:layout_marginTop="50dp"
             app:layout_constraintEnd_toStartOf="@+id/iv_3"
             app:layout_constraintStart_toEndOf="@+id/iv_1"
@@ -58,7 +59,7 @@
         <ImageView
             android:id="@+id/iv_3"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="100dp"
             android:layout_marginTop="50dp"
             app:layout_constraintEnd_toStartOf="@id/iv_4"
             app:layout_constraintStart_toEndOf="@+id/iv_2"
@@ -68,7 +69,7 @@
         <ImageView
             android:id="@+id/iv_4"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="100dp"
             android:layout_marginTop="50dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/iv_3"
@@ -181,7 +182,7 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cv_kg"
-            android:layout_width="wrap_content"
+            android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="2dp"
             android:layout_marginBottom="10dp"
@@ -215,7 +216,7 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cv_lb"
-            android:layout_width="wrap_content"
+            android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="2dp"
             android:layout_marginEnd="2dp"
@@ -268,9 +269,10 @@
                 android:layout_height="match_parent">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="50dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="3dp"
+                    android:gravity="center"
                     android:text="oz"
                     android:textColor="@color/white"
                     android:textSize="15sp"
@@ -284,7 +286,7 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cv_metros"
-            android:layout_width="wrap_content"
+            android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="2dp"
             android:layout_marginBottom="10dp"
@@ -318,7 +320,7 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cv_pies"
-            android:layout_width="wrap_content"
+            android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="2dp"
             android:layout_marginBottom="10dp"
