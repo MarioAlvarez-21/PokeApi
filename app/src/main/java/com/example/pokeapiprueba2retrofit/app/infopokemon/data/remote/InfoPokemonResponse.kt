@@ -28,6 +28,7 @@ data class InfoPokemonResponse(
     val pastTypes: List<Any?>,
     val species: SpeciesResponse,
     val sprites: SpritesResponse,
+    @SerializedName("stats")
     val stats: List<StatResponse>,
     @SerializedName("types")
     val types: List<TypeResponse>,
@@ -493,7 +494,7 @@ data class Icons2Response(
 
 data class StatResponse(
     @SerializedName("base_stat")
-    val baseStat: Long,
+    val baseStat: Int,
     val effort: Long,
     val stat: Stat2Response
 )

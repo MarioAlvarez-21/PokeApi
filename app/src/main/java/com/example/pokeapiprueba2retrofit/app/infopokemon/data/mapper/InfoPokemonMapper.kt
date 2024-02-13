@@ -4,12 +4,15 @@ import com.example.pokeapiprueba2retrofit.app.infopokemon.data.model.Ability2Mod
 import com.example.pokeapiprueba2retrofit.app.infopokemon.data.model.AbilityModel
 import com.example.pokeapiprueba2retrofit.app.infopokemon.data.model.InfoPokemonModel
 import com.example.pokeapiprueba2retrofit.app.infopokemon.data.model.SpritesModel
+import com.example.pokeapiprueba2retrofit.app.infopokemon.data.model.StatModel
 import com.example.pokeapiprueba2retrofit.app.infopokemon.data.model.Type2Model
 import com.example.pokeapiprueba2retrofit.app.infopokemon.data.model.TypeModel
 import com.example.pokeapiprueba2retrofit.app.infopokemon.data.remote.Ability2Response
 import com.example.pokeapiprueba2retrofit.app.infopokemon.data.remote.AbilityResponse
 import com.example.pokeapiprueba2retrofit.app.infopokemon.data.remote.InfoPokemonResponse
 import com.example.pokeapiprueba2retrofit.app.infopokemon.data.remote.SpritesResponse
+import com.example.pokeapiprueba2retrofit.app.infopokemon.data.remote.Stat2Response
+import com.example.pokeapiprueba2retrofit.app.infopokemon.data.remote.StatResponse
 import com.example.pokeapiprueba2retrofit.app.infopokemon.data.remote.Type2Response
 import com.example.pokeapiprueba2retrofit.app.infopokemon.data.remote.TypeResponse
 
@@ -23,6 +26,7 @@ class InfoPokemonMapper {
         val abilityModel = infoPokemonResponse.abilities.map { abilityResponse ->
             abilitiesMapper(abilityResponse)
         }
+        val stats = infoPokemonResponse.stats.map { stats -> statsMapper(stats) }
         return InfoPokemonModel(
             id = infoPokemonResponse.id,
             name = infoPokemonResponse.name,
@@ -30,7 +34,8 @@ class InfoPokemonMapper {
             weight = infoPokemonResponse.weight,
             height = infoPokemonResponse.height,
             types = typeModel,
-            abilities = abilityModel
+            abilities = abilityModel,
+            stats = stats
 
         )
     }
@@ -64,5 +69,11 @@ class InfoPokemonMapper {
 
     fun abilities2Mapper(ability2Response: Ability2Response): Ability2Model {
         return Ability2Model(name = ability2Response.name)
+    }
+
+    fun statsMapper(statResponse: StatResponse): StatModel {
+        return StatModel(
+            baseStat = statResponse.baseStat
+        )
     }
 }

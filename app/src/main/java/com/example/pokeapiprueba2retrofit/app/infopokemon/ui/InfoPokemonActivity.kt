@@ -1,5 +1,7 @@
 package com.example.pokeapiprueba2retrofit.app.infopokemon.ui
 
+import android.media.AudioAttributes
+import android.media.MediaPlayer
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -10,11 +12,13 @@ import com.example.pokeapiprueba2retrofit.app.api.PokeApi
 import com.example.pokeapiprueba2retrofit.app.infopokemon.viewmodel.InfoPokemonViewModel
 import com.example.pokeapiprueba2retrofit.databinding.ActivityInfoPokemonBinding
 import kotlinx.coroutines.launch
+import java.io.IOException
 
 class InfoPokemonActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityInfoPokemonBinding
     private lateinit var viewModel: InfoPokemonViewModel
+    lateinit var mediaPlayer: MediaPlayer
 
     private val defaultValue = 0.0
     private val HEC_TO_LB = 4.536
@@ -32,6 +36,7 @@ class InfoPokemonActivity : AppCompatActivity() {
         val intent = intent
         val pokemonId = intent.getIntExtra("id", 0)
 
+        playAudioFromUrl(PokeApi.urlSound(pokemonId + 1))
         viewModel.getSprites(pokemonId + 1)
 
         lifecycleScope.launch {
@@ -108,6 +113,48 @@ class InfoPokemonActivity : AppCompatActivity() {
             }
         }
 
+        lifecycleScope.launch {
+            viewModel.pokemonStatHP.collect { hp ->
+                binding.pbHP.progress = hp ?: 0
+                binding.tvHP.text = hp.toString()
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.pokemonStatAttack.collect { attack ->
+                binding.pbAttack.progress = attack ?: 0
+                binding.tvAttack.text = attack.toString()
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.pokemonStatDefense.collect { defense ->
+                binding.pbDefense.progress = defense ?: 0
+                binding.tvDefense.text = defense.toString()
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.pokemonStatSpeed.collect { speed ->
+                binding.pbSpeed.progress = speed ?: 0
+                binding.tvSpeed.text = speed.toString()
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.pokemonStatSpecialAttack.collect { specialAttack ->
+                binding.pbAttackS.progress = specialAttack ?: 0
+                binding.tvAttackS.text = specialAttack.toString()
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.pokemonStatSpecialDefense.collect { specialDefense ->
+                binding.pbDefenseS.progress = specialDefense ?: 0
+                binding.tvDefenseS.text = specialDefense.toString()
+            }
+        }
+
         val requestOptions = RequestOptions()
             .centerCrop()
             .error(android.R.drawable.ic_menu_gallery)
@@ -116,6 +163,8 @@ class InfoPokemonActivity : AppCompatActivity() {
             .apply(requestOptions)
             .fitCenter()
             .into(binding.imageView2)
+
+        binding.ibSound.setOnClickListener { playAudioFromUrl(PokeApi.urlSound(pokemonId + 1)) }
 
     }
 
@@ -154,6 +203,33 @@ class InfoPokemonActivity : AppCompatActivity() {
             .apply(requestOptions)
             .fitCenter()
             .into(binding.imageView2)
+    }
+
+    fun playAudioFromUrl(url: String) {
+        mediaPlayer = MediaPlayer().apply {
+            setAudioAttributes(
+                AudioAttributes.Builder()
+                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                    .setUsage(AudioAttributes.USAGE_MEDIA)
+                    .build()
+            )
+            setOnPreparedListener {
+                // Cuando el MediaPlayer esté listo, comenzamos a reproducir
+                start()
+            }
+        }
+
+        try {
+            mediaPlayer.setDataSource(url)
+            mediaPlayer.prepareAsync()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mediaPlayer.release()
     }
 
 }
