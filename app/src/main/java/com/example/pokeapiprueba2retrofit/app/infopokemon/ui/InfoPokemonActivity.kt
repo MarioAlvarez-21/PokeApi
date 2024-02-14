@@ -41,6 +41,7 @@ class InfoPokemonActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             viewModel.sprites1.collect { sprites1 ->
+
                 imageSprites(
                     sprites1?.frontDefault.toString(),
                     sprites1?.frontShiny.toString(),

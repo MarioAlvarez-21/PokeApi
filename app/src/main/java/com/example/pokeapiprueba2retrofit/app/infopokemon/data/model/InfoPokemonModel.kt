@@ -13,7 +13,7 @@ import kotlinx.parcelize.Parcelize
 data class InfoPokemonModel(
     val id: Int,
     val name: String,
-    val sprites: SpritesModel,
+    val sprites: SpritesModel?,
     val height: Int,
     val weight: Int,
     val types: List<TypeModel>,

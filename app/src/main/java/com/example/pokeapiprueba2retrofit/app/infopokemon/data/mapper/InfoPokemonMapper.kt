@@ -42,10 +42,10 @@ class InfoPokemonMapper {
 
     fun spritesMapper(spritesResponse: SpritesResponse): SpritesModel {
         return SpritesModel(
-            backDefault = spritesResponse.backDefault,
-            backShiny = spritesResponse.backShiny,
-            frontDefault = spritesResponse.frontDefault,
-            frontShiny = spritesResponse.frontShiny
+            backDefault = spritesResponse.backDefault?:"",
+            backShiny = spritesResponse.backShiny?:"",
+            frontDefault = spritesResponse.frontDefault?:"",
+            frontShiny = spritesResponse.frontShiny?:""
         )
     }
 
