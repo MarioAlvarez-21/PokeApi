@@ -60,7 +60,11 @@ dependencies {
     implementation ("androidx.lifecycle:lifecycle-livedata-ktx:2.7.0")
     //Glide
     implementation("com.github.bumptech.glide:glide:4.16.0")
+    //Flows
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
+    //Traducir textos
+    implementation ("com.google.mlkit:language-id:17.0.2")
+    implementation ("com.google.mlkit:translate:17.0.2")
     annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

@@ -1,5 +1,7 @@
 package com.example.pokeapiprueba2retrofit.app.api
 
+import com.example.pokeapiprueba2retrofit.app.infopokemon.data.remote.AbilityPokemonResponse
+import com.example.pokeapiprueba2retrofit.app.infopokemon.data.remote.InfoAbilitiesResponse
 import com.example.pokeapiprueba2retrofit.app.infopokemon.data.remote.InfoPokemonResponse
 import com.example.pokeapiprueba2retrofit.app.main.data.remote.PokemonResponse
 import okhttp3.ResponseBody
@@ -28,5 +30,8 @@ interface PokeApi {
 
     @GET("pokemon/{id}")
     fun getPokemonById(@Path("id") id: Int): Call<InfoPokemonResponse>
+
+    @GET("ability/{name}")
+    fun getAbilityById(@Path("name") name: String): Call<InfoAbilitiesResponse>
 
 }

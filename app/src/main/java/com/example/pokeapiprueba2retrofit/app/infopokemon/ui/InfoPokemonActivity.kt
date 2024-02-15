@@ -37,7 +37,8 @@ class InfoPokemonActivity : AppCompatActivity() {
         val pokemonId = intent.getIntExtra("id", 0)
 
         playAudioFromUrl(PokeApi.urlSound(pokemonId + 1))
-        viewModel.getSprites(pokemonId + 1)
+        viewModel.getPokemondata(pokemonId + 1)
+
 
         lifecycleScope.launch {
             viewModel.sprites1.collect { sprites1 ->
@@ -61,6 +62,36 @@ class InfoPokemonActivity : AppCompatActivity() {
         lifecycleScope.launch {
             viewModel.pokemonName.collect { name ->
                 binding.tvName.text = name?.substring(0, 1)?.toUpperCase() + name?.substring(1)
+            }
+        }
+        lifecycleScope.launch {
+            viewModel.ability1.collect { ability ->
+                binding.tvHability1.text = ability
+            }
+        }
+        lifecycleScope.launch {
+            viewModel.ability2.collect { ability ->
+                binding.tvHability2.text = ability
+            }
+        }
+        lifecycleScope.launch {
+            viewModel.ability3.collect { ability ->
+                binding.tvHability3.text = ability
+            }
+        }
+        lifecycleScope.launch {
+            viewModel.tittleAbility1.collect { ability ->
+                binding.tvTitleHability1.text = ability
+            }
+        }
+        lifecycleScope.launch {
+            viewModel.tittleAbility2.collect { ability ->
+                binding.tvTittleHability2.text = ability
+            }
+        }
+        lifecycleScope.launch {
+            viewModel.tittleAbility3.collect { ability ->
+                binding.tvTittleHability3.text = ability
             }
         }
 
@@ -104,15 +135,16 @@ class InfoPokemonActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             viewModel.pokemonTypes.collect { types ->
-                binding.tvTypes.text = types?.joinToString(", ")
+                binding.tvTypes.text = types?.joinToString("\n• ", "• ")
             }
         }
 
-        lifecycleScope.launch {
+        /*lifecycleScope.launch {
             viewModel.pokemonAbilities.collect { abilities ->
-                binding.tvAbilities.text = abilities?.joinToString(", ")
+                binding.tvAbilities.text = abilities?.joinToString("\n• ", "• ")
+
             }
-        }
+        }*/
 
         lifecycleScope.launch {
             viewModel.pokemonStatHP.collect { hp ->

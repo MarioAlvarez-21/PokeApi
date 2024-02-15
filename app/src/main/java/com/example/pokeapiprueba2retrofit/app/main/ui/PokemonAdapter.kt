@@ -6,18 +6,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.pokeapiprueba2retrofit.R
-import com.example.pokeapiprueba2retrofit.databinding.ItemPokemonBinding
 import com.example.pokeapiprueba2retrofit.app.api.PokeApi
 import com.example.pokeapiprueba2retrofit.app.infopokemon.ui.InfoPokemonActivity
 import com.example.pokeapiprueba2retrofit.app.main.data.model.PokemonsResultModel
+import com.example.pokeapiprueba2retrofit.databinding.ItemPokemonBinding
 
 class PokemonAdapter(private val pokemons: MutableList<PokemonsResultModel>) :
     RecyclerView.Adapter<PokemonAdapter.PokemonViewHolder>() {
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PokemonViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_pokemon, parent, false)
@@ -38,7 +38,7 @@ class PokemonAdapter(private val pokemons: MutableList<PokemonsResultModel>) :
 
     }
 
-    class PokemonViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class PokemonViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         private val binding = ItemPokemonBinding.bind(itemView)
         val nameTextView: TextView = binding.textView
@@ -64,6 +64,8 @@ class PokemonAdapter(private val pokemons: MutableList<PokemonsResultModel>) :
         }
 
     }
+
+
 }
 
 

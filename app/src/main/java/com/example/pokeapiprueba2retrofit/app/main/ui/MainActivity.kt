@@ -3,6 +3,7 @@ package com.example.pokeapiprueba2retrofit.app.main.ui
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
@@ -30,7 +31,6 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
         observer()
 
         viewModel.getPokemonsByLimitAndOffset(offset)
-
 
     }
 
@@ -69,8 +69,5 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
         }
 
     }
-
-
-
 
 }
