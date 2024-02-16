@@ -51,7 +51,6 @@ class InfoPokemonViewModel : ViewModel() {
                 ) {
                     if (response.isSuccessful) {
                         val pokemonResponse = response.body()
-
                         val pokemonModel =
                             pokemonResponse?.let { infoPokemonMapper.infoPokemonMapper(it) }
 
@@ -70,9 +69,9 @@ class InfoPokemonViewModel : ViewModel() {
                         pokemonStatSpecialDefense.value = pokemonModel.stats[4].baseStat
                         pokemonStatSpeed.value = pokemonModel.stats[5].baseStat
                         val abilitySize = pokemonModel.abilities.size
-                        val a1 : String
-                        val a2 : String
-                        val a3 : String
+                        val a1: String
+                        val a2: String
+                        val a3: String
 
                         when (abilitySize) {
                             1 -> {
@@ -80,6 +79,7 @@ class InfoPokemonViewModel : ViewModel() {
                                 tittleAbility1.value = a1
                                 getPokemonAbility1(a1)
                             }
+
                             2 -> {
                                 a1 = pokemonModel.abilities.getOrNull(0)?.ability?.name ?: ""
                                 tittleAbility1.value = a1
@@ -88,6 +88,7 @@ class InfoPokemonViewModel : ViewModel() {
                                 tittleAbility2.value = a2
                                 getPokemonAbility2(a2)
                             }
+
                             3 -> {
                                 a1 = pokemonModel.abilities.getOrNull(0)?.ability?.name ?: ""
                                 tittleAbility1.value = a1

@@ -3,12 +3,16 @@ package com.example.pokeapiprueba2retrofit.app.infopokemon.ui
 import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.provider.SyncStateContract.Constants
+import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.pokeapiprueba2retrofit.app.api.PokeApi
+import com.example.pokeapiprueba2retrofit.app.constants.constants
 import com.example.pokeapiprueba2retrofit.app.infopokemon.viewmodel.InfoPokemonViewModel
 import com.example.pokeapiprueba2retrofit.databinding.ActivityInfoPokemonBinding
 import kotlinx.coroutines.launch
@@ -99,7 +103,7 @@ class InfoPokemonActivity : AppCompatActivity() {
             viewModel.pokemonWeight.collect { weight ->
                 binding.apply {
                     tvPeso.text =
-                        viewModel.divFormat(weight ?: defaultValue.toInt(), HEC_TO_LB, " lb")
+                        viewModel.divFormat(weight ?: defaultValue.toInt(), HEC_TO_KG, " kg")
                     cvKg.setOnClickListener {
                         tvPeso.text =
                             viewModel.divFormat(weight ?: defaultValue.toInt(), HEC_TO_KG, " kg")
@@ -120,7 +124,7 @@ class InfoPokemonActivity : AppCompatActivity() {
             viewModel.pokemonHeight.collect { height ->
                 binding.apply {
                     tvAlto.text =
-                        viewModel.divFormat(height ?: defaultValue.toInt(), DM_TO_FT, " ft")
+                        viewModel.divFormat(height ?: defaultValue.toInt(), DM_TO_M, " m")
                     cvMetros.setOnClickListener {
                         tvAlto.text =
                             viewModel.divFormat(height ?: defaultValue.toInt(), DM_TO_M, " m")
@@ -135,16 +139,32 @@ class InfoPokemonActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             viewModel.pokemonTypes.collect { types ->
-                binding.tvTypes.text = types?.joinToString("\n• ", "• ")
+                types?.let {
+                    for (type in it) {
+                        when (type) {
+                            constants.FIRE -> binding.ivFuego.visibility = View.VISIBLE
+                            constants.WATER -> binding.ivAgua.visibility = View.VISIBLE
+                            constants.GRASS -> binding.ivPlanta.visibility = View.VISIBLE
+                            constants.ELECTRIC -> binding.ivElectrico.visibility = View.VISIBLE
+                            constants.NORMAL -> binding.ivNormal.visibility = View.VISIBLE
+                            constants.FLYING -> binding.ivVolador.visibility = View.VISIBLE
+                            constants.POISON -> binding.ivVeneno.visibility = View.VISIBLE
+                            constants.GROUND -> binding.ivTierra.visibility = View.VISIBLE
+                            constants.FAIRY -> binding.ivHada.visibility = View.VISIBLE
+                            constants.FIGHTING -> binding.ivLucha.visibility = View.VISIBLE
+                            constants.PSYCHIC -> binding.ivPsiquico.visibility = View.VISIBLE
+                            constants.ROCK -> binding.ivRoca.visibility = View.VISIBLE
+                            constants.BUG -> binding.ivBicho.visibility = View.VISIBLE
+                            constants.GHOST -> binding.ivFantasma.visibility = View.VISIBLE
+                            constants.DRAGON -> binding.ivDragon.visibility = View.VISIBLE
+                            constants.ICE -> binding.ivHielo.visibility = View.VISIBLE
+                            constants.STEEL -> binding.ivAcero.visibility = View.VISIBLE
+                            constants.DARK -> binding.ivSiniestro.visibility = View.VISIBLE
+                        }
+                    }
+                }
             }
         }
-
-        /*lifecycleScope.launch {
-            viewModel.pokemonAbilities.collect { abilities ->
-                binding.tvAbilities.text = abilities?.joinToString("\n• ", "• ")
-
-            }
-        }*/
 
         lifecycleScope.launch {
             viewModel.pokemonStatHP.collect { hp ->

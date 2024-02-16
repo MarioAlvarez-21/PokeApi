@@ -43,9 +43,15 @@ class PokemonAdapter(private val pokemons: MutableList<PokemonsResultModel>) :
         private val binding = ItemPokemonBinding.bind(itemView)
         val nameTextView: TextView = binding.textView
         val urlTextView: ImageView = binding.imageView
+        val indexTextView: TextView = binding.tvIndex
 
         fun bind(items: PokemonsResultModel, n: Int) {
+            var index = n
+            index++
             nameTextView.text = items.name
+            indexTextView.text = index.toString()
+
+
 
             val requestOptions = RequestOptions()
                 .centerCrop()

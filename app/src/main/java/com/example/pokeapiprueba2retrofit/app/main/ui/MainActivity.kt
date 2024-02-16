@@ -6,11 +6,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pokeapiprueba2retrofit.databinding.ActivityMainBinding
 import com.example.pokeapiprueba2retrofit.app.main.data.model.PokemonsResultModel
 import com.example.pokeapiprueba2retrofit.app.main.viewmodel.PokemonViewModel
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity(), LifecycleOwner {
 
@@ -35,9 +37,11 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
     }
 
     private fun observer() {
-        viewModel.pokemonsVM.observe(this) { pokemons ->
-            myAdapter.adicionarLista(pokemons)
-            aptoParaCargar = true
+        lifecycleScope.launch {
+            viewModel.pokemonsVM.collect { pokemons ->
+                myAdapter.adicionarLista(pokemons ?: mutableListOf())
+                aptoParaCargar = true
+            }
         }
     }
 
@@ -59,7 +63,7 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
                             if (visibleItemCount + pastVisibleItems >= totalItemCount) {
                                 Log.i("MARIO", " Llegamos al final.")
                                 aptoParaCargar = false
-                                offset += 30
+                                offset += 60
                                 viewModel.getPokemonsByLimitAndOffset(offset)
                             }
                         }

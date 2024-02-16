@@ -1,3 +1,15 @@
 <resources>
-    <string name="app_name">PokeApiPrueba2Retrofit</string>
+    <string name="app_name">PokedexMario</string>
+    <string name="weight">Peso</string>
+    <string name="height">Altura</string>
+    <string name="types">Tipos</string>
+    <string name="statistics">Estadísticas</string>
+    <string name="hp">hp</string>
+    <string name="attack">Ataque</string>
+    <string name="defense">Defensa</string>
+    <string name="special_attack">Ataque especial</string>
+    <string name="special_defense">defensa especial</string>
+    <string name="speed">Velocidad</string>
+    <string name="abilities">Habilidades</string>
+    <string name="tittle_main">Pokémon</string>
 </resources>

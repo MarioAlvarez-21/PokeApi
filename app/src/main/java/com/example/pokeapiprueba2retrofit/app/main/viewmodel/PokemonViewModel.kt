@@ -8,7 +8,9 @@ import com.example.pokeapiprueba2retrofit.app.main.data.mapper.PokemonResultMapp
 import com.example.pokeapiprueba2retrofit.app.main.data.model.PokemonsResultModel
 import com.example.pokeapiprueba2retrofit.app.main.data.remote.PokemonResponse
 import com.example.pokeapiprueba2retrofit.app.api.RetrofitModule.getInstance
+import com.example.pokeapiprueba2retrofit.app.infopokemon.data.model.SpritesModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
@@ -16,14 +18,15 @@ import retrofit2.Response
 
 class PokemonViewModel() : ViewModel() {
 
-    val pokemonsVM: MutableLiveData<MutableList<PokemonsResultModel>> = MutableLiveData()
+    //val pokemonsVM: MutableLiveData<MutableList<PokemonsResultModel>> = MutableLiveData()
+    val pokemonsVM: MutableStateFlow<MutableList<PokemonsResultModel>?> = MutableStateFlow(null)
 
     private val pokemonMapper = PokemonMapper()
 
     fun getPokemonsByLimitAndOffset(offset:Int) {
         viewModelScope.launch(Dispatchers.IO) {
 
-                getInstance().getPokemonsByLimitAndOffset(30, offset).enqueue(object : Callback<PokemonResponse> {
+                getInstance().getPokemonsByLimitAndOffset(60, offset).enqueue(object : Callback<PokemonResponse> {
                     override fun onResponse(
                         call: Call<PokemonResponse>,
                         response: Response<PokemonResponse>) {
@@ -36,11 +39,9 @@ class PokemonViewModel() : ViewModel() {
                         } else {
 
                         }
-
                     }
 
                     override fun onFailure(call: Call<PokemonResponse>, t: Throwable) {
-
                     }
                 })
         }
