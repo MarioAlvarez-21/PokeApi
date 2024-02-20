@@ -1,17 +1,17 @@
 package com.example.pokeapiprueba2retrofit.app.main.ui
 
 import android.os.Bundle
-import android.util.Log
+import android.os.Handler
+import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.pokeapiprueba2retrofit.databinding.ActivityMainBinding
+import com.example.pokeapiprueba2retrofit.R
 import com.example.pokeapiprueba2retrofit.app.main.data.model.PokemonsResultModel
 import com.example.pokeapiprueba2retrofit.app.main.viewmodel.PokemonViewModel
+import com.example.pokeapiprueba2retrofit.databinding.ActivityMainBinding
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity(), LifecycleOwner {
@@ -19,7 +19,6 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
     private lateinit var binding: ActivityMainBinding
     private lateinit var viewModel: PokemonViewModel
     private lateinit var myAdapter: PokemonAdapter
-    private var aptoParaCargar = true
     private var offset = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,19 +27,18 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
         setContentView(binding.root)
 
         viewModel = ViewModelProvider(this)[PokemonViewModel::class.java]
-
-        recyclerConfigurations(mutableListOf())
         observer()
 
         viewModel.getPokemonsByLimitAndOffset(offset)
+
+        refresh()
 
     }
 
     private fun observer() {
         lifecycleScope.launch {
             viewModel.pokemonsVM.collect { pokemons ->
-                myAdapter.adicionarLista(pokemons ?: mutableListOf())
-                aptoParaCargar = true
+                recyclerConfigurations(pokemons ?: mutableListOf())
             }
         }
     }
@@ -51,27 +49,36 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
             layoutManager = GridLayoutManager(this@MainActivity, 3)
             myAdapter = PokemonAdapter(pokemons)
             adapter = myAdapter
-            addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    super.onScrolled(recyclerView, dx, dy)
-                    if (dy > 0) {
-                        val visibleItemCount = (layoutManager as GridLayoutManager).childCount
-                        val totalItemCount = (layoutManager as GridLayoutManager).itemCount
-                        val pastVisibleItems: Int =
-                            (layoutManager as GridLayoutManager).findFirstVisibleItemPosition()
-                        if (aptoParaCargar) {
-                            if (visibleItemCount + pastVisibleItems >= totalItemCount) {
-                                Log.i("MARIO", " Llegamos al final.")
-                                aptoParaCargar = false
-                                offset += 60
-                                viewModel.getPokemonsByLimitAndOffset(offset)
-                            }
-                        }
-                    }
-                }
-            })
         }
 
     }
+
+    private fun refresh(){
+        binding.apply {
+            swipeRefreshLayout.setProgressBackgroundColorSchemeColor(resources.getColor(R.color.asas))
+            swipeRefreshLayout.setColorSchemeColors(resources.getColor(R.color.textGreen))
+            swipeRefreshLayout.setOnRefreshListener {
+                // Aquí es donde debes actualizar tus datos y refrescar el RecyclerView
+                // Por ejemplo, puedes llamar a un método que cargue los datos de nuevo
+                loadDataAndRefresh()
+            }
+
+        }
+
+    }
+
+    private fun loadDataAndRefresh() {
+        // Simula una operación de carga de datos
+        Handler(Looper.getMainLooper()).postDelayed({
+            viewModel.getPokemonsByLimitAndOffset(offset)
+            // Aquí debes cargar tus datos, por ejemplo, desde una base de datos o una API
+            // Una vez que los datos están cargados, actualiza el RecyclerView
+            // Asegúrate de llamar a swipeRefreshLayout.setRefreshing(false) para detener la animación de refresco
+            binding.swipeRefreshLayout.isRefreshing = false
+            // Notifica a tu Adapter que los datos han cambiado
+            myAdapter.notifyDataSetChanged()
+        },  2000) // Simula un retardo de  2 segundos
+    }
+
 
 }

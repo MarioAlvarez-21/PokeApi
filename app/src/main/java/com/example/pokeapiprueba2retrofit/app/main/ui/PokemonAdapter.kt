@@ -32,12 +32,6 @@ class PokemonAdapter(private val pokemons: MutableList<PokemonsResultModel>) :
 
     override fun getItemCount() = pokemons.size
 
-    fun adicionarLista(pokemonList: MutableList<PokemonsResultModel>) {
-        this.pokemons.addAll(pokemonList)
-        notifyDataSetChanged()
-
-    }
-
     inner class PokemonViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         private val binding = ItemPokemonBinding.bind(itemView)

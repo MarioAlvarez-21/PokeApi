@@ -37,6 +37,7 @@ class InfoPokemonViewModel : ViewModel() {
     val ability1: MutableStateFlow<String?> = MutableStateFlow(null)
     val ability2: MutableStateFlow<String?> = MutableStateFlow(null)
     val ability3: MutableStateFlow<String?> = MutableStateFlow(null)
+    val progress: MutableStateFlow<Boolean> = MutableStateFlow(true)
     private val infoPokemonMapper = InfoPokemonMapper()
     private val infoAbilitiesMapper = InfoAbilitiesMapper()
 
@@ -102,7 +103,7 @@ class InfoPokemonViewModel : ViewModel() {
                             }
                         }
 
-
+                        progress.value = false
                         Log.i("MARIO", pokemonModel.stats.toString())
                     } else {
                         Log.i("MARIO", response.code().toString())
@@ -111,7 +112,24 @@ class InfoPokemonViewModel : ViewModel() {
                 }
 
                 override fun onFailure(call: Call<InfoPokemonResponse>, t: Throwable) {
-                    TODO("Not yet implemented")
+                    sprites1.value = SpritesModel("", "", "", "")
+                    pokemonName.value = ""
+                    pokemonHeight.value = 0
+                    pokemonWeight.value = 0
+                    pokemonTypes.value = emptyList()
+                    pokemonAbilities.value = emptyList()
+                    pokemonStatHP.value = 0
+                    pokemonStatAttack.value = 0
+                    pokemonStatDefense.value = 0
+                    pokemonStatSpecialAttack.value = 0
+                    pokemonStatSpecialDefense.value = 0
+                    pokemonStatSpeed.value = 0
+                    tittleAbility1.value = ""
+                    tittleAbility2.value = ""
+                    tittleAbility3.value = ""
+                    ability1.value = ""
+                    ability2.value = ""
+                    ability3.value = ""
                 }
             })
         }

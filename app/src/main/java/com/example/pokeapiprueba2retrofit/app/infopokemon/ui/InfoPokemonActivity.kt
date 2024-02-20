@@ -2,11 +2,14 @@ package com.example.pokeapiprueba2retrofit.app.infopokemon.ui
 
 import android.media.AudioAttributes
 import android.media.MediaPlayer
+import android.os.Build
 import android.os.Bundle
-import android.provider.SyncStateContract.Constants
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
@@ -17,6 +20,7 @@ import com.example.pokeapiprueba2retrofit.app.infopokemon.viewmodel.InfoPokemonV
 import com.example.pokeapiprueba2retrofit.databinding.ActivityInfoPokemonBinding
 import kotlinx.coroutines.launch
 import java.io.IOException
+
 
 class InfoPokemonActivity : AppCompatActivity() {
 
@@ -35,7 +39,18 @@ class InfoPokemonActivity : AppCompatActivity() {
         binding = ActivityInfoPokemonBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            window.setDecorFitsSystemWindows(false)
+        } else {
+            @Suppress("DEPRECATION")
+            window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                    or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
+        }
+
         viewModel = ViewModelProvider(this)[InfoPokemonViewModel::class.java]
+
+        binding.progressBar.visibility = View.VISIBLE
 
         val intent = intent
         val pokemonId = intent.getIntExtra("id", 0)
@@ -64,8 +79,16 @@ class InfoPokemonActivity : AppCompatActivity() {
         }
 
         lifecycleScope.launch {
+            viewModel.progress.collect { cargado ->
+                binding.progressBar.visibility = if (cargado) View.VISIBLE else View.GONE
+            }
+        }
+
+        lifecycleScope.launch {
             viewModel.pokemonName.collect { name ->
-                binding.tvName.text = name?.substring(0, 1)?.toUpperCase() + name?.substring(1)
+                if (!name.isNullOrEmpty()){
+                    binding.tvName.text = name?.substring(0, 1)?.toUpperCase() + name?.substring(1)
+                }
             }
         }
         lifecycleScope.launch {

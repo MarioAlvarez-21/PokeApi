@@ -65,6 +65,7 @@ dependencies {
     //Traducir textos
     implementation ("com.google.mlkit:language-id:17.0.2")
     implementation ("com.google.mlkit:translate:17.0.2")
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
