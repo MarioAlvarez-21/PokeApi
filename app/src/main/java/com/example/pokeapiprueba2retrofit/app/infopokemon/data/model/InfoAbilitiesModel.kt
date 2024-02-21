@@ -4,11 +4,27 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class InfoAbilitiesModel(
-    val effectEntries: List<AbilityEffectEntriesModel>,
-    ) : BaseModelInfoPokemon()
+    val descripciones: List<AbilityFlavorTextEntriesModel>,
+    val names: List<AbilityNamesModel>
+) : BaseModelInfoPokemon()
 
 @Parcelize
-data class AbilityEffectEntriesModel(
-    val effect: String,
-    val shortEffect: String
-): BaseModelInfoPokemon()
+data class AbilityFlavorTextEntriesModel(
+    val description: String?,
+    val language: AbilityLanguageModel?
+) : BaseModelInfoPokemon()
+
+@Parcelize
+data class AbilityNamesModel(
+    val name: String?,
+    val language: AbilityLanguageModel?
+) : BaseModelInfoPokemon()
+
+@Parcelize
+data class AbilityLanguageModel(
+    val name: String?
+) : BaseModelInfoPokemon()
+
+
+
+
