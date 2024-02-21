@@ -15,7 +15,6 @@ import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.io.IOException
 
 class InfoPokemonViewModel : ViewModel() {
 
@@ -38,6 +37,7 @@ class InfoPokemonViewModel : ViewModel() {
     val ability2: MutableStateFlow<String?> = MutableStateFlow(null)
     val ability3: MutableStateFlow<String?> = MutableStateFlow(null)
     val progress: MutableStateFlow<Boolean> = MutableStateFlow(true)
+    val listAbilities: MutableStateFlow<List<String>?> = MutableStateFlow(null)
     private val infoPokemonMapper = InfoPokemonMapper()
     private val infoAbilitiesMapper = InfoAbilitiesMapper()
 
@@ -52,6 +52,7 @@ class InfoPokemonViewModel : ViewModel() {
                 ) {
                     if (response.isSuccessful) {
                         val pokemonResponse = response.body()
+
                         val pokemonModel =
                             pokemonResponse?.let { infoPokemonMapper.infoPokemonMapper(it) }
 
@@ -77,34 +78,28 @@ class InfoPokemonViewModel : ViewModel() {
                         when (abilitySize) {
                             1 -> {
                                 a1 = pokemonModel.abilities.getOrNull(0)?.ability?.name ?: ""
-                                tittleAbility1.value = a1
                                 getPokemonAbility1(a1)
                             }
 
                             2 -> {
                                 a1 = pokemonModel.abilities.getOrNull(0)?.ability?.name ?: ""
-                                tittleAbility1.value = a1
                                 getPokemonAbility1(a1)
                                 a2 = pokemonModel.abilities.getOrNull(1)?.ability?.name ?: ""
-                                tittleAbility2.value = a2
                                 getPokemonAbility2(a2)
                             }
 
                             3 -> {
                                 a1 = pokemonModel.abilities.getOrNull(0)?.ability?.name ?: ""
-                                tittleAbility1.value = a1
                                 getPokemonAbility1(a1)
+                                Log.i("MARIOOOOO", a1)
                                 a2 = pokemonModel.abilities.getOrNull(1)?.ability?.name ?: ""
-                                tittleAbility2.value = a2
                                 getPokemonAbility2(a2)
                                 a3 = pokemonModel.abilities.getOrNull(2)?.ability?.name ?: ""
-                                tittleAbility3.value = a3
                                 getPokemonAbility3(a3)
                             }
                         }
 
                         progress.value = false
-                        Log.i("MARIO", pokemonModel.stats.toString())
                     } else {
                         Log.i("MARIO", response.code().toString())
                     }
@@ -150,10 +145,18 @@ class InfoPokemonViewModel : ViewModel() {
                         val pokemonAbility =
                             pokemonAbilityResponse?.let { infoAbilitiesMapper.infoAbilitiesMapper(it) }
 
-                        ability1.value = pokemonAbility?.effectEntries?.getOrNull(1)?.effect ?: ""
+                        pokemonAbility?.descripciones?.forEach {
+                            if (it.language?.name == "es") {
+                                ability1.value = it.description ?: "No disponible en español"
+                            }
+                        }
+                        pokemonAbility?.names?.forEach {
+                            if (it.language?.name == "es") {
+                                tittleAbility1.value = it.name ?: "No disponible en español"
+                            }
+                        }
 
 
-                        Log.i("MARIOoo", ability1.value.toString())
                     } else {
                         Log.i("MARIO", response.code().toString())
                     }
@@ -161,7 +164,7 @@ class InfoPokemonViewModel : ViewModel() {
                 }
 
                 override fun onFailure(call: Call<InfoAbilitiesResponse>, t: Throwable) {
-
+                    Log.i("MARIOerr", t.message.toString())
                 }
             })
         }
@@ -182,7 +185,16 @@ class InfoPokemonViewModel : ViewModel() {
                         val pokemonAbility =
                             pokemonAbilityResponse?.let { infoAbilitiesMapper.infoAbilitiesMapper(it) }
 
-                        ability2.value = pokemonAbility?.effectEntries?.getOrNull(1)?.effect ?: ""
+                        pokemonAbility?.descripciones?.forEach {
+                            if (it.language?.name == "es") {
+                                ability2.value = it.description ?: ""
+                            }
+                        }
+                        pokemonAbility?.names?.forEach {
+                            if (it.language?.name == "es") {
+                                tittleAbility2.value = it.name ?: ""
+                            }
+                        }
 
 
                         Log.i("MARIOoo", ability1.value.toString())
@@ -214,7 +226,16 @@ class InfoPokemonViewModel : ViewModel() {
                         val pokemonAbility =
                             pokemonAbilityResponse?.let { infoAbilitiesMapper.infoAbilitiesMapper(it) }
 
-                        ability3.value = pokemonAbility?.effectEntries?.getOrNull(1)?.effect ?: ""
+                        pokemonAbility?.descripciones?.forEach {
+                            if (it.language?.name == "es") {
+                                ability3.value = it.description ?: ""
+                            }
+                        }
+                        pokemonAbility?.names?.forEach {
+                            if (it.language?.name == "es") {
+                                tittleAbility3.value = it.name
+                            }
+                        }
 
 
                         Log.i("MARIOoo", ability1.value.toString())

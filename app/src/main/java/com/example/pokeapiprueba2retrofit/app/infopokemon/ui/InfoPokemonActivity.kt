@@ -6,18 +6,16 @@ import android.os.Build
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.example.pokeapiprueba2retrofit.R
 import com.example.pokeapiprueba2retrofit.app.api.PokeApi
 import com.example.pokeapiprueba2retrofit.app.constants.constants
 import com.example.pokeapiprueba2retrofit.app.infopokemon.viewmodel.InfoPokemonViewModel
 import com.example.pokeapiprueba2retrofit.databinding.ActivityInfoPokemonBinding
+import com.example.pokeapiprueba2retrofit.databinding.ItemsAbilitiesBinding
 import kotlinx.coroutines.launch
 import java.io.IOException
 
@@ -290,7 +288,6 @@ class InfoPokemonActivity : AppCompatActivity() {
                     .build()
             )
             setOnPreparedListener {
-                // Cuando el MediaPlayer esté listo, comenzamos a reproducir
                 start()
             }
         }
@@ -300,6 +297,22 @@ class InfoPokemonActivity : AppCompatActivity() {
             mediaPlayer.prepareAsync()
         } catch (e: IOException) {
             e.printStackTrace()
+        }
+    }
+
+    private fun loadLinearLayout(abilities: List<String>) {
+        binding.linearLayout.removeAllViews()
+
+        for (i in abilities) {
+            val inflater = layoutInflater
+            val elementView = inflater.inflate(R.layout.items_abilities, null)
+            val itemsAbilitiesBinding = ItemsAbilitiesBinding.bind(elementView)
+
+            with(itemsAbilitiesBinding) {
+                tvTittleHability4.text = i[0].toString()
+                tvHability4.text = i[1].toString()
+            }
+            binding.linearLayout.addView(elementView)
         }
     }
 
