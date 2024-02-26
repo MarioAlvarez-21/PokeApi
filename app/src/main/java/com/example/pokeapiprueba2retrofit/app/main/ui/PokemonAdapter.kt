@@ -15,9 +15,15 @@ import com.example.pokeapiprueba2retrofit.app.infopokemon.ui.InfoPokemonActivity
 import com.example.pokeapiprueba2retrofit.app.main.data.model.PokemonsResultModel
 import com.example.pokeapiprueba2retrofit.databinding.ItemPokemonBinding
 
-class PokemonAdapter(private val pokemons: MutableList<PokemonsResultModel>) :
+class PokemonAdapter(private var pokemons: MutableList<PokemonsResultModel>) :
     RecyclerView.Adapter<PokemonAdapter.PokemonViewHolder>() {
 
+
+    // Método para actualizar la lista de Pokemon
+    fun updatePokemonList(newPokemonList: MutableList<PokemonsResultModel>) {
+        pokemons = newPokemonList
+        notifyDataSetChanged() // Notifica al RecyclerView que los datos han cambiado
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PokemonViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_pokemon, parent, false)
@@ -26,7 +32,7 @@ class PokemonAdapter(private val pokemons: MutableList<PokemonsResultModel>) :
 
     override fun onBindViewHolder(holder: PokemonViewHolder, position: Int) {
         val pokemon = pokemons[position]
-        holder.bind(pokemon, position)
+        holder.bind(pokemon)
 
     }
 
@@ -39,26 +45,24 @@ class PokemonAdapter(private val pokemons: MutableList<PokemonsResultModel>) :
         val urlTextView: ImageView = binding.imageView
         val indexTextView: TextView = binding.tvIndex
 
-        fun bind(items: PokemonsResultModel, n: Int) {
-            var index = n
-            index++
+        fun bind(items: PokemonsResultModel) {
+            val id = items.id
             nameTextView.text = items.name
-            indexTextView.text = index.toString()
-
+            indexTextView.text = id.toString()
 
 
             val requestOptions = RequestOptions()
                 .centerCrop()
-                .error(android.R.drawable.ic_menu_gallery)
+                .error(R.drawable.incognita)
             Glide.with(urlTextView.context)
-                .load(PokeApi.url(n))
+                .load(PokeApi.url(id))
                 .apply(requestOptions)
                 .fitCenter()
                 .into(urlTextView)
 
             itemView.setOnClickListener {
                 val intent = Intent(itemView.context, InfoPokemonActivity::class.java)
-                intent.putExtra("id", n)
+                intent.putExtra("id", id)
                 itemView.context.startActivity(intent)
             }
         }

@@ -36,15 +36,7 @@ class InfoPokemonActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityInfoPokemonBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            window.setDecorFitsSystemWindows(false)
-        } else {
-            @Suppress("DEPRECATION")
-            window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                    or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                    or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
-        }
+        fullScreen()
 
         viewModel = ViewModelProvider(this)[InfoPokemonViewModel::class.java]
 
@@ -53,8 +45,8 @@ class InfoPokemonActivity : AppCompatActivity() {
         val intent = intent
         val pokemonId = intent.getIntExtra("id", 0)
 
-        playAudioFromUrl(PokeApi.urlSound(pokemonId + 1))
-        viewModel.getPokemondata(pokemonId + 1)
+        playAudioFromUrl(PokeApi.urlSound(pokemonId))
+        viewModel.getPokemondata(pokemonId)
 
 
         lifecycleScope.launch {
@@ -84,39 +76,27 @@ class InfoPokemonActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             viewModel.pokemonName.collect { name ->
-                if (!name.isNullOrEmpty()){
+                if (!name.isNullOrEmpty()) {
                     binding.tvName.text = name?.substring(0, 1)?.toUpperCase() + name?.substring(1)
                 }
             }
         }
         lifecycleScope.launch {
-            viewModel.ability1.collect { ability ->
-                binding.tvHability1.text = ability
-            }
-        }
-        lifecycleScope.launch {
-            viewModel.ability2.collect { ability ->
-                binding.tvHability2.text = ability
-            }
-        }
-        lifecycleScope.launch {
-            viewModel.ability3.collect { ability ->
-                binding.tvHability3.text = ability
-            }
-        }
-        lifecycleScope.launch {
-            viewModel.tittleAbility1.collect { ability ->
-                binding.tvTitleHability1.text = ability
-            }
-        }
-        lifecycleScope.launch {
-            viewModel.tittleAbility2.collect { ability ->
-                binding.tvTittleHability2.text = ability
-            }
-        }
-        lifecycleScope.launch {
-            viewModel.tittleAbility3.collect { ability ->
-                binding.tvTittleHability3.text = ability
+            viewModel.listAbilities.collect { ability ->
+                var name = ""
+                var descripcion = ""
+                ability?.names?.forEach {
+                    if (it.language?.name == "es") {
+                        name = it.name ?: "No disponible en español"
+                    }
+                }
+                ability?.descripciones?.forEach {
+                    if (it.language?.name == "es") {
+                        descripcion = it.description ?: "No disponible en español"
+                    }
+                }
+
+                loadLinearLayout(name, descripcion)
             }
         }
 
@@ -300,19 +280,27 @@ class InfoPokemonActivity : AppCompatActivity() {
         }
     }
 
-    private fun loadLinearLayout(abilities: List<String>) {
-        binding.linearLayout.removeAllViews()
+    private fun loadLinearLayout(name: String, descripcion: String) {
+        val inflater = layoutInflater
+        val elementView = inflater.inflate(R.layout.items_abilities, null)
+        val itemsAbilitiesBinding = ItemsAbilitiesBinding.bind(elementView)
 
-        for (i in abilities) {
-            val inflater = layoutInflater
-            val elementView = inflater.inflate(R.layout.items_abilities, null)
-            val itemsAbilitiesBinding = ItemsAbilitiesBinding.bind(elementView)
+        with(itemsAbilitiesBinding) {
+            tvTittleHability4.text = name
+            tvHability4.text = descripcion
+        }
+        binding.linearLayout.addView(elementView)
 
-            with(itemsAbilitiesBinding) {
-                tvTittleHability4.text = i[0].toString()
-                tvHability4.text = i[1].toString()
-            }
-            binding.linearLayout.addView(elementView)
+    }
+
+    private fun fullScreen() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            window.setDecorFitsSystemWindows(false)
+        } else {
+            @Suppress("DEPRECATION")
+            window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                    or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
         }
     }
 

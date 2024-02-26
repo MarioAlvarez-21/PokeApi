@@ -63,9 +63,7 @@ dependencies {
     implementation("com.github.bumptech.glide:glide:4.16.0")
     //Flows
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
-    //Traducir textos
-    implementation ("com.google.mlkit:language-id:17.0.2")
-    implementation ("com.google.mlkit:translate:17.0.2")
+    //Swiperefreshlayout
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
     testImplementation("junit:junit:4.13.2")

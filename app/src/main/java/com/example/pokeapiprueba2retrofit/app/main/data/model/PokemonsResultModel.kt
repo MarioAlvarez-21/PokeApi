@@ -4,6 +4,8 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class PokemonsResultModel(
-    val name: String,
-    val url: String
+    val name: String = "",
+    val url: String = "",
+    val id: Int = 0,
+    val sprite: String = ""
 ) : BaseModel()

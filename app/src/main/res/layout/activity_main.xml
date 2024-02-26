@@ -17,7 +17,7 @@
         android:layout_marginEnd="25dp"
         android:gravity="center"
         android:text="@string/tittle_main"
-        android:textColor="#009688"
+        android:textColor="@color/textGreen"
         android:textSize="30sp"
         android:textStyle="italic"
         app:layout_constraintEnd_toEndOf="parent"
@@ -25,23 +25,36 @@
         app:layout_constraintTop_toTopOf="parent" />
 
 
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/sv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:queryHint="Busca un pokemon"
+        android:hint="Busca un pokemon"
+        app:iconifiedByDefault="false"
+        android:foregroundTint="@color/white"
+        android:theme="@style/Theme.Material3.Dark.NoActionBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_tittle" />
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="10dp"
-        app:swipeRefreshLayoutProgressSpinnerBackgroundColor="#00453F"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_tittle">
+        app:layout_constraintTop_toBottomOf="@+id/sv"
+        app:swipeRefreshLayoutProgressSpinnerBackgroundColor="#00453F">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:listitem="@layout/item_pokemon"
-             />
+            tools:listitem="@layout/item_pokemon" />
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 

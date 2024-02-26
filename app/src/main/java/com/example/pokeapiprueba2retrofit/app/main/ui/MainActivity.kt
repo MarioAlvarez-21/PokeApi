@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -41,6 +42,11 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
                 recyclerConfigurations(pokemons ?: mutableListOf())
             }
         }
+        lifecycleScope.launch {
+            viewModel.swipeRefresh.collect { refresh ->
+                binding.swipeRefreshLayout.isRefreshing = refresh == true
+            }
+        }
     }
 
     private fun recyclerConfigurations(pokemons: MutableList<PokemonsResultModel>) {
@@ -49,6 +55,25 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
             layoutManager = GridLayoutManager(this@MainActivity, 3)
             myAdapter = PokemonAdapter(pokemons)
             adapter = myAdapter
+            binding.sv.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    return false
+                }
+
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    newText?.let {
+                        // Filtrar la lista de Pokemon según el texto de búsqueda y convertirla a MutableList
+                        val filteredList: MutableList<PokemonsResultModel> =
+                            pokemons.filter { pokemon ->
+                                pokemon.name.contains(it, ignoreCase = true)
+                            }.toMutableList()
+                        // Actualizar el adaptador con la lista filtrada
+                        myAdapter.updatePokemonList(filteredList)
+                    }
+                    return false
+                }
+            })
+
         }
 
     }
@@ -58,8 +83,6 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
             swipeRefreshLayout.setProgressBackgroundColorSchemeColor(resources.getColor(R.color.asas))
             swipeRefreshLayout.setColorSchemeColors(resources.getColor(R.color.textGreen))
             swipeRefreshLayout.setOnRefreshListener {
-                // Aquí es donde debes actualizar tus datos y refrescar el RecyclerView
-                // Por ejemplo, puedes llamar a un método que cargue los datos de nuevo
                 loadDataAndRefresh()
             }
 
